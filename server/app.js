@@ -14,21 +14,17 @@ const PORT = process.env.PORT || 3001
 const app = express()
 
 keystone.init({
-
   'name': 'Keystone Test',
-
   'favicon': '../public/favicons/favicon.ico',
   'static': ['public'],
-
   'auto update': true,
   'cors allow origin': true,
   'cors allow methods': 'GET,OPTIONS,POST',
-
   'session': true,
   'auth': true,
   'user model': 'User',
-  'cookie secret': 'dummykeystonecookiesecret'
-
+  'cookie secret': 'dummykeystonecookiesecret',
+  'trust proxy': true
 });
 
 if (process.env.MONGODB) {
@@ -71,7 +67,7 @@ app.use('/api', api)
 const universalLoader = require('./universal')
 app.use('/', universalLoader)
 
-keystone.import('models')
+keystone.import('./models')
 
 keystone.set('nav', {
 	'users': ['User']

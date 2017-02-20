@@ -1,4 +1,4 @@
-import { SET, RESET } from '../types/user'
+import { SET, RESET } from '../actions/user'
 
 const initialState = {
   email: 'user@example.com'
@@ -14,4 +14,3 @@ export default function reducer(state=initialState, action) {
       return state
   }
 }
-

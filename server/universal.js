@@ -38,7 +38,7 @@ module.exports = function universalLoader(req, res, next) {
         const RenderedApp = htmlData.replace('{{SSR}}', ReactApp)
         res.send(RenderedApp)
       } else {
-        // return res.status(404).end()
+        return res.status(404).end()
       }
     })
   })
