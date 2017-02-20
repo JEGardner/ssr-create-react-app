@@ -7,8 +7,46 @@ const express = require('express')
 const morgan = require('morgan')
 const path = require('path')
 const fs = require('fs')
+const keystone = require('keystone')
+const mongoose = require('mongoose')
+const PORT = process.env.PORT || 3001
 
 const app = express()
+
+keystone.init({
+
+  'name': 'Keystone Test',
+
+  'favicon': '../public/favicons/favicon.ico',
+  'static': ['public'],
+
+  'auto update': true,
+  'cors allow origin': true,
+  'cors allow methods': 'GET,OPTIONS,POST',
+
+  'session': true,
+  'auth': true,
+  'user model': 'User',
+  'cookie secret': 'dummykeystonecookiesecret'
+
+});
+
+if (process.env.MONGODB) {
+	keystone.set('mongo', process.env.MONGODB)
+}
+
+
+if (process.env.HOST) {
+	keystone.set('host', process.env.HOST)
+}
+
+if (process.env.PORT) {
+	keystone.set('port', PORT)
+}
+
+if (process.env.SOCKET) {
+	keystone.set('unix socket', process.env.SOCKET)
+}
 
 // Support Gzip
 app.use(compression())
@@ -33,4 +71,12 @@ app.use('/api', api)
 const universalLoader = require('./universal')
 app.use('/', universalLoader)
 
-module.exports = app
+keystone.import('models')
+
+keystone.set('nav', {
+	'users': ['User']
+})
+
+keystone.set('app', app)
+
+module.exports = keystone

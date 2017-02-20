@@ -11,9 +11,11 @@ import {Provider} from 'react-redux'
 
 const routes = createRoutes({})
 
-module.exports = function universalLoader(req, res) {
+module.exports = function universalLoader(req, res, next) {
   //res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'))
   const filePath = path.resolve(__dirname, '..', 'build', 'index.html')
+
+  if (req.path.includes('/keystone')) return next()
 
   fs.readFile(filePath, 'utf8', (err, htmlData)=>{
     if (err) {
@@ -36,9 +38,8 @@ module.exports = function universalLoader(req, res) {
         const RenderedApp = htmlData.replace('{{SSR}}', ReactApp)
         res.send(RenderedApp)
       } else {
-        return res.status(404).end()
+        // return res.status(404).end()
       }
     })
   })
 }
-
